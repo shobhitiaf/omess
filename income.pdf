@@ -1,0 +1,791 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<h2 style='color:purple' align='center'>Training And Testing Available Data</h2>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<p><b>We have a dataset containing different income heads in an Officers' Mess. We are going to analyze this dataset\n",
+    "and build a prediction function that can predict Growth-rate by taking these income heads \n",
+    "as input. We will use sklearn train_test_split method to split training and testing dataset</b></p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Income</th>\n",
+       "      <th>Contribution (SCB)</th>\n",
+       "      <th>Gift Income (Maint)</th>\n",
+       "      <th>IAFBA Accrued intrest</th>\n",
+       "      <th>Intrest on SBI (Maint)</th>\n",
+       "      <th>Lighting Charges</th>\n",
+       "      <th>Misc (SCB)</th>\n",
+       "      <th>Room Kit</th>\n",
+       "      <th>Room Rent</th>\n",
+       "      <th>Share of Profit (URC)</th>\n",
+       "      <th>...</th>\n",
+       "      <th>Prepaid Insurance</th>\n",
+       "      <th>Auction of WOC items</th>\n",
+       "      <th>Intrest on IAFBA</th>\n",
+       "      <th>Lenen charges</th>\n",
+       "      <th>Maint income</th>\n",
+       "      <th>Room item charges</th>\n",
+       "      <th>Misc Income</th>\n",
+       "      <th>Balance C/F</th>\n",
+       "      <th>Total</th>\n",
+       "      <th>Growth</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2017-18</td>\n",
+       "      <td>4800</td>\n",
+       "      <td>7125</td>\n",
+       "      <td>115495</td>\n",
+       "      <td>29905</td>\n",
+       "      <td>27065</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2489996</td>\n",
+       "      <td>600000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>1645</td>\n",
+       "      <td>500</td>\n",
+       "      <td>38324</td>\n",
+       "      <td>1404</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>3829571.00</td>\n",
+       "      <td>9.27</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2018-19</td>\n",
+       "      <td>8300</td>\n",
+       "      <td>8458</td>\n",
+       "      <td>463250</td>\n",
+       "      <td>18674</td>\n",
+       "      <td>3200</td>\n",
+       "      <td>31390</td>\n",
+       "      <td>762</td>\n",
+       "      <td>2158991</td>\n",
+       "      <td>750000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>3480395.00</td>\n",
+       "      <td>5.11</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2019-20</td>\n",
+       "      <td>9600</td>\n",
+       "      <td>0</td>\n",
+       "      <td>453031</td>\n",
+       "      <td>10437</td>\n",
+       "      <td>0</td>\n",
+       "      <td>96</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1920675</td>\n",
+       "      <td>500000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>400</td>\n",
+       "      <td>0</td>\n",
+       "      <td>8760</td>\n",
+       "      <td>3600</td>\n",
+       "      <td>19410</td>\n",
+       "      <td>7</td>\n",
+       "      <td>177005.48</td>\n",
+       "      <td>3144106.48</td>\n",
+       "      <td>1.99</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2020-2021</td>\n",
+       "      <td>5700</td>\n",
+       "      <td>0</td>\n",
+       "      <td>391774</td>\n",
+       "      <td>62894</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1733391</td>\n",
+       "      <td>400000</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1950</td>\n",
+       "      <td>0</td>\n",
+       "      <td>6879</td>\n",
+       "      <td>162</td>\n",
+       "      <td>52994</td>\n",
+       "      <td>30012</td>\n",
+       "      <td>130206.36</td>\n",
+       "      <td>2855557.36</td>\n",
+       "      <td>1.16</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>4 rows × 23 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Income  Contribution (SCB)  Gift Income (Maint)  IAFBA Accrued intrest  \\\n",
+       "0    2017-18                4800                 7125                 115495   \n",
+       "1    2018-19                8300                 8458                 463250   \n",
+       "2    2019-20                9600                    0                 453031   \n",
+       "3  2020-2021                5700                    0                 391774   \n",
+       "\n",
+       "   Intrest on SBI (Maint)  Lighting Charges  Misc (SCB)  Room Kit  Room Rent  \\\n",
+       "0                   29905             27065           0         0    2489996   \n",
+       "1                   18674              3200       31390       762    2158991   \n",
+       "2                   10437                 0          96         0    1920675   \n",
+       "3                   62894                 0           0         0    1733391   \n",
+       "\n",
+       "   Share of Profit (URC)  ...  Prepaid Insurance  Auction of WOC items  \\\n",
+       "0                 600000  ...               1645                   500   \n",
+       "1                 750000  ...                  0                     0   \n",
+       "2                 500000  ...                  0                   400   \n",
+       "3                 400000  ...                  0                  1950   \n",
+       "\n",
+       "   Intrest on IAFBA  Lenen charges  Maint income  Room item charges  \\\n",
+       "0             38324           1404             0                  0   \n",
+       "1                 0              0             0                  0   \n",
+       "2                 0           8760          3600              19410   \n",
+       "3                 0           6879           162              52994   \n",
+       "\n",
+       "   Misc Income  Balance C/F       Total  Growth  \n",
+       "0            0         0.00  3829571.00    9.27  \n",
+       "1            0         0.00  3480395.00    5.11  \n",
+       "2            7    177005.48  3144106.48    1.99  \n",
+       "3        30012    130206.36  2855557.36    1.16  \n",
+       "\n",
+       "[4 rows x 23 columns]"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "df = pd.read_excel(r\"C:\\Users\\lom\\Desktop\\income.xlsx\")\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Bar Chart (Year v/s Growth-Rate)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Text(0.5, 1.0, 'Growth-Rate')"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "plt.bar(df['Income'],df['Growth'])\n",
+    "plt.xlabel(\"year\")\n",
+    "plt.ylabel(\"Growth%\")\n",
+    "plt.title(\"Growth-Rate\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Looking at above Bar-Chart,we can clearly make out that there is declining pattern. This decline may be attributed to any of the income factors. Let us device a method to predict Growth-rate based on various income factors. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<p style='color:purple'><b>The approach we are going to use here is to split available data in two sets</b></p>\n",
+    "    <ol>\n",
+    "        <b>\n",
+    "        <li>Training: We will train our model on this dataset</li>\n",
+    "        <li>Testing: We will use this subset to make actual predictions using trained model</li>\n",
+    "        </b>\n",
+    "     </ol>\n",
+    "<p style='color:purple'><b>The reason we don't use same training set for testing is because our model has seen those samples before, using same samples for making predictions might give us wrong impression about accuracy of our model. It is like you ask same questions in exam paper as you taught the students in the class.\n",
+    "</b></p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 69,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = df[['Room Rent']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 70,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y = df['Growth']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 82,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Room Rent</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2489996</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1733391</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1920675</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Room Rent\n",
+       "0    2489996\n",
+       "3    1733391\n",
+       "2    1920675"
+      ]
+     },
+     "execution_count": 83,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Room Rent</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2158991</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Room Rent\n",
+       "1    2158991"
+      ]
+     },
+     "execution_count": 84,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 85,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0    9.27\n",
+       "3    1.16\n",
+       "2    1.99\n",
+       "Name: Growth, dtype: float64"
+      ]
+     },
+     "execution_count": 85,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 86,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1    5.11\n",
+       "Name: Growth, dtype: float64"
+      ]
+     },
+     "execution_count": 86,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_test"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Lets run linear regression model now**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 87,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 87,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from sklearn.linear_model import LinearRegression\n",
+    "clf = LinearRegression()\n",
+    "clf.fit(X_train,y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 88,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Room Rent</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2158991</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Room Rent\n",
+       "1    2158991"
+      ]
+     },
+     "execution_count": 88,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 89,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([5.38306516])"
+      ]
+     },
+     "execution_count": 89,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "clf.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 90,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1    5.11\n",
+       "Name: Growth, dtype: float64"
+      ]
+     },
+     "execution_count": 90,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_test"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# It can be seen that model predicted the Growth % as 5.38306516 as compared to actual 5.11. This suggests that model is fairly accurate for the dataset. Further, prediction for any year can be made by following steps:"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**random_state argument**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 92,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "C:\\Users\\lom\\anaconda3\\lib\\site-packages\\sklearn\\utils\\validation.py:63: FutureWarning: Arrays of bytes/strings is being converted to decimal numbers if dtype='numeric'. This behavior is deprecated in 0.24 and will be removed in 1.1 (renaming of 0.26). Please convert your data to numeric values explicitly instead.\n",
+      "  return f(*args, **kwargs)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array([-1.99880646])"
+      ]
+     },
+     "execution_count": 92,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "clf.predict([['1500000']])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# A low Room-Rent income(15,00,000), will definitely impact the Growth-rate in a negative manner. This model is good for analysing a linear relation between one INDEPENDENT & one DEPENDENT variable. This will help in studying the impact of each income-head towards Growth-rate."
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# However, growth-rate in an NPF is calculated over MULTIPLE_INDEPENDENT & one DEPENDENT variable. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 94,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 94,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from sklearn import linear_model\n",
+    "reg = linear_model.LinearRegression()\n",
+    "reg.fit(df[['Contribution (SCB)','Gift Income (Maint)','IAFBA Accrued intrest','Intrest on SBI (Maint)','Lighting Charges','Misc (SCB)','Room Kit','Room Rent','Share of Profit (URC)','Subscription (SCB)','Intrest on investment','DG collection','Prepaid Insurance','Auction of WOC items','Intrest on IAFBA','Lenen charges','Maint income','Room item charges','Misc Income','Balance C/F','Total']],df['Growth'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 95,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-1.68418556e-07,  2.04822741e-07, -3.79425369e-06,  1.79639037e-06,\n",
+       "        2.37515710e-07,  5.81319242e-07,  1.42378032e-08,  2.78372617e-06,\n",
+       "        2.44044864e-06, -1.58829154e-07,  3.04196685e-06,  1.05341030e-07,\n",
+       "        1.08020194e-08,  3.79375129e-08,  2.51657502e-07, -2.66294500e-07,\n",
+       "       -1.90173852e-07,  4.79577017e-07,  8.66188920e-07, -5.82090862e-06,\n",
+       "        2.45305315e-06])"
+      ]
+     },
+     "execution_count": 95,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.coef_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 96,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "-9.557245508367963"
+      ]
+     },
+     "execution_count": 96,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "reg.intercept_"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# reg.predict([[Prediction value for each income-head]])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Above command will predict the Growth-rate based on value for each income-head"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
